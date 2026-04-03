@@ -1,0 +1,484 @@
+/* ===================================================
+   大橘子的家 — Modern Bird Watching Site
+   birds.css
+   =================================================== */
+
+/* --- Design Tokens --- */
+:root {
+  --color-forest:    #2d5a27;
+  --color-moss:      #4a7c40;
+  --color-fern:      #6b9e5e;
+  --color-bark:      #5c4033;
+  --color-soil:      #8b6347;
+  --color-cream:     #faf6ef;
+  --color-parchment: #f0e8d8;
+  --color-stone:     #e8ddd0;
+  --color-charcoal:  #2c2c2c;
+  --color-sky:       #4a8fa8;
+  --color-sky-hover: #2d6b85;
+
+  --font-serif: 'Noto Serif TC', '標楷體', Georgia, serif;
+  --font-sans:  'Noto Sans TC', '微軟正黑體', system-ui, sans-serif;
+
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-12: 48px;
+
+  --sidebar-width: 200px;
+  --radius: 6px;
+}
+
+/* --- Reset & Base --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-sky);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-sky-hover);
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+ul { list-style: none; }
+
+/* ===================================================
+   BREADCRUMB
+   =================================================== */
+.breadcrumb {
+  background: var(--color-parchment);
+  border-bottom: 1px solid var(--color-stone);
+  padding: var(--space-2) var(--space-4);
+  font-size: 0.8rem;
+  font-family: var(--font-sans);
+  white-space: nowrap;
+  overflow-x: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+}
+.breadcrumb a { color: var(--color-sky); }
+.breadcrumb a:hover { color: var(--color-sky-hover); }
+.breadcrumb-current {
+  color: var(--color-bark);
+  font-weight: 700;
+}
+.breadcrumb-sep {
+  color: var(--color-fern);
+  margin: 0 2px;
+}
+.breadcrumb-nav-links {
+  margin-left: var(--space-2);
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.breadcrumb-nav-links a {
+  background: var(--color-stone);
+  border-radius: 3px;
+  padding: 1px 6px;
+  font-size: 0.75rem;
+}
+.breadcrumb-nav-links a:hover {
+  background: var(--color-forest);
+  color: white;
+  text-decoration: none;
+}
+
+/* ===================================================
+   TWO-COLUMN LAYOUT
+   =================================================== */
+.layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-areas: "toggle toggle" "sidebar content";
+  min-height: calc(100vh - 42px);
+}
+
+/* Hamburger button (hidden on desktop) */
+.sidebar-toggle {
+  display: none;
+  grid-area: toggle;
+  background: var(--color-forest);
+  color: white;
+  border: none;
+  padding: var(--space-2) var(--space-4);
+  font-size: 1.2rem;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-sans);
+  letter-spacing: 0.05em;
+}
+.sidebar-toggle:hover { background: var(--color-moss); }
+
+/* Sidebar */
+.sidebar {
+  grid-area: sidebar;
+  background: var(--color-parchment);
+  border-right: 2px solid var(--color-stone);
+  padding: var(--space-4) var(--space-3);
+  font-size: 0.85rem;
+  line-height: 2;
+  position: sticky;
+  top: 0;
+  max-height: 100vh;
+  overflow-y: auto;
+}
+.sidebar a {
+  display: block;
+  padding: 0 var(--space-2);
+  border-radius: 3px;
+  color: var(--color-sky);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sidebar a:hover {
+  background: var(--color-stone);
+  text-decoration: none;
+}
+.sidebar b, .sidebar strong {
+  display: block;
+  padding: 0 var(--space-2);
+  padding-left: var(--space-3);
+  border-left: 3px solid var(--color-fern);
+  color: var(--color-bark);
+  font-weight: 700;
+  font-family: var(--font-serif);
+}
+.sidebar hr {
+  border: none;
+  border-top: 1px solid var(--color-stone);
+  margin: var(--space-2) 0;
+}
+.sidebar-section-title {
+  font-size: 0.75rem;
+  color: var(--color-soil);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: var(--space-2) var(--space-2) 0;
+  margin-top: var(--space-2);
+}
+
+/* Main content area */
+.content {
+  grid-area: content;
+  padding: var(--space-6) var(--space-8);
+  max-width: 900px;
+}
+
+/* ===================================================
+   SEASON INDEX PAGE  (.page-season)
+   =================================================== */
+.page-season .content h1,
+.page-season .season-title {
+  font-family: var(--font-serif);
+  color: var(--color-bark);
+  font-size: 1.4rem;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-2);
+  border-bottom: 2px solid var(--color-fern);
+}
+
+.page-season .content ul {
+  margin-top: var(--space-2);
+}
+
+.page-season .content li {
+  border-left: 3px solid transparent;
+  padding: var(--space-2) var(--space-3);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  transition: background 150ms, border-color 150ms;
+  line-height: 1.5;
+}
+.page-season .content li:hover {
+  background: var(--color-parchment);
+  border-left-color: var(--color-fern);
+}
+.page-season .content li a {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-sky);
+}
+.page-season .content li a:hover {
+  color: var(--color-sky-hover);
+}
+
+/* ===================================================
+   BIRD SPECIES PAGE  (.page-bird)
+   =================================================== */
+.page-bird .content p:first-child,
+.page-bird .bird-name {
+  font-family: var(--font-serif);
+  color: var(--color-bark);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.bird-meta {
+  color: var(--color-soil);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-4);
+}
+
+.bird-photo {
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  margin: var(--space-4) 0;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Extra images on the same page */
+.page-bird .content p img {
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  margin: var(--space-3) 0;
+}
+
+/* ===================================================
+   ALL.HTM  (.page-all)
+   =================================================== */
+.page-all .content h2,
+.page-all .content > p > a {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--color-bark);
+  font-weight: 700;
+  margin-top: var(--space-6);
+  margin-bottom: var(--space-1);
+  display: block;
+}
+.page-all .content > p:first-child > a { margin-top: 0; }
+
+.page-all .content ul {
+  margin-bottom: var(--space-2);
+}
+.page-all .content li {
+  border-left: 3px solid transparent;
+  padding: 2px var(--space-3);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  transition: background 120ms, border-color 120ms;
+  font-size: 0.95rem;
+}
+.page-all .content li:hover {
+  background: var(--color-parchment);
+  border-left-color: var(--color-fern);
+}
+
+/* ===================================================
+   HOMEPAGE  (.page-index)
+   =================================================== */
+
+/* Site header */
+.site-header {
+  background: var(--color-forest);
+  background: linear-gradient(135deg, var(--color-forest) 0%, #1e3d1a 100%);
+  padding: var(--space-8) var(--space-8) var(--space-6);
+  color: white;
+}
+.site-header h1 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  color: white;
+  margin-bottom: var(--space-2);
+}
+.site-welcome {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-sans);
+}
+
+/* Top nav bar */
+.home-nav {
+  background: var(--color-moss);
+  padding: var(--space-2) var(--space-8);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  font-size: 0.8rem;
+}
+.home-nav a {
+  color: rgba(255, 255, 255, 0.9);
+  padding: 2px 6px;
+  border-radius: 3px;
+  transition: background 150ms;
+}
+.home-nav a:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+}
+.home-nav-sep {
+  color: rgba(255, 255, 255, 0.4);
+  user-select: none;
+}
+
+/* Season grid */
+.season-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: var(--space-6);
+  padding: var(--space-8);
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.season-card {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  background: white;
+  transition: transform 200ms ease, box-shadow 200ms ease;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+}
+.season-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  text-decoration: none;
+}
+.season-thumb {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  display: block;
+}
+.season-card-label {
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--color-bark);
+  border-top: 1px solid var(--color-stone);
+  background: white;
+}
+
+/* Site footer */
+.site-footer {
+  text-align: center;
+  padding: var(--space-8);
+  font-size: 0.8rem;
+  color: var(--color-soil);
+  border-top: 1px solid var(--color-stone);
+  margin-top: var(--space-8);
+}
+.site-footer a { color: var(--color-soil); }
+
+/* ===================================================
+   SPECIAL / LINK / ABOUT PAGES  (.page-other)
+   =================================================== */
+.page-other .content {
+  padding: var(--space-6) var(--space-8);
+}
+.page-other .content p {
+  margin-bottom: var(--space-3);
+  line-height: 1.8;
+}
+
+/* ===================================================
+   RESPONSIVE
+   =================================================== */
+@media (max-width: 640px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-areas: "toggle" "content";
+  }
+
+  /* Show hamburger */
+  .sidebar-toggle { display: block; }
+
+  /* Sidebar slides in as overlay */
+  .sidebar {
+    grid-area: unset;
+    position: fixed;
+    top: 0;
+    left: -270px;
+    width: 260px;
+    height: 100vh;
+    z-index: 200;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.25);
+    transition: left 250ms ease;
+  }
+  .sidebar.is-open { left: 0; }
+
+  /* Overlay backdrop */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 199;
+  }
+  .sidebar-backdrop.is-open { display: block; }
+
+  .content {
+    grid-area: content;
+    padding: var(--space-4);
+  }
+
+  .season-grid {
+    grid-template-columns: 1fr;
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+
+  .site-header { padding: var(--space-6) var(--space-4) var(--space-4); }
+  .site-header h1 { font-size: 1.5rem; }
+  .home-nav { padding: var(--space-2) var(--space-4); }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  :root { --sidebar-width: 160px; }
+  .content { padding: var(--space-4) var(--space-6); }
+}
+
+@media (min-width: 1400px) {
+  .season-grid {
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  }
+}
+
+/* ===================================================
+   UTILITY
+   =================================================== */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
