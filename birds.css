@@ -471,6 +471,58 @@ ul { list-style: none; }
 }
 
 /* ===================================================
+   SEARCH BOX (injected into every page via birds.js)
+   =================================================== */
+.site-search {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.15);
+}
+.site-search input[type="search"] {
+  border: none;
+  padding: 6px 12px;
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  width: 180px;
+  outline: none;
+  background: rgba(255,255,255,0.95);
+  color: var(--color-charcoal);
+}
+.site-search input[type="search"]::placeholder { color: #aaa; }
+.site-search button {
+  background: var(--color-moss);
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 150ms;
+  white-space: nowrap;
+}
+.site-search button:hover { background: var(--color-fern); }
+
+/* Placed inside .site-header on homepage */
+.site-header .site-search { margin-top: var(--space-4); }
+
+/* Placed inside .breadcrumb on other pages */
+.breadcrumb .site-search { margin-left: auto; }
+.breadcrumb .site-search input[type="search"] {
+  background: white;
+  font-size: 0.8rem;
+  width: 150px;
+  padding: 3px 8px;
+}
+.breadcrumb .site-search button { padding: 3px 8px; font-size: 0.8rem; }
+
+@media (max-width: 640px) {
+  .site-search input[type="search"] { width: 120px; }
+  .breadcrumb .site-search input[type="search"] { width: 100px; }
+}
+
+/* ===================================================
    UTILITY
    =================================================== */
 .visually-hidden {

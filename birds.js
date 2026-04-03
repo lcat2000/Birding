@@ -69,4 +69,38 @@
     });
   }
 
+  /* --- Inject Search Box --- */
+  function makeSearchBox() {
+    var base = (window.location.pathname.indexOf('/Birding') !== -1 ||
+                window.location.pathname === '/') ? '' : '';
+    var form = document.createElement('form');
+    form.className = 'site-search';
+    form.action = 'search.html';
+    form.method = 'get';
+    var input = document.createElement('input');
+    input.type = 'search';
+    input.name = 'q';
+    input.placeholder = '搜尋鳥名…';
+    input.setAttribute('autocomplete', 'off');
+    var btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.textContent = '🔍';
+    btn.setAttribute('aria-label', '搜尋');
+    form.appendChild(input);
+    form.appendChild(btn);
+    return form;
+  }
+
+  // Inject into homepage header
+  var siteHeader = document.querySelector('.site-header');
+  if (siteHeader) {
+    siteHeader.appendChild(makeSearchBox());
+  }
+
+  // Inject into breadcrumb on other pages
+  var breadcrumb = document.querySelector('.breadcrumb');
+  if (breadcrumb) {
+    breadcrumb.appendChild(makeSearchBox());
+  }
+
 })();

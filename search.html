@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>搜尋鳥類 — 大橘子的家</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="birds.css">
+<style>
+  /* ── Search Page Specific ── */
+  .search-page-header {
+    background: var(--color-forest);
+    background: linear-gradient(135deg, var(--color-forest) 0%, #1e3d1a 100%);
+    padding: var(--space-6) var(--space-8);
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+  }
+  .search-page-header a.back-link {
+    color: rgba(255,255,255,0.8);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+  .search-page-header a.back-link:hover { color: white; text-decoration: none; }
+  .search-page-header h1 {
+    font-family: var(--font-serif);
+    font-size: 1.4rem;
+    color: white;
+    margin-right: auto;
+  }
+
+  .search-container {
+    max-width: 860px;
+    margin: var(--space-8) auto;
+    padding: 0 var(--space-6);
+  }
+
+  .search-input-wrap {
+    display: flex;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    margin-bottom: var(--space-6);
+  }
+  #q {
+    flex: 1;
+    border: 2px solid var(--color-stone);
+    border-right: none;
+    padding: var(--space-3) var(--space-4);
+    font-family: var(--font-sans);
+    font-size: 1.1rem;
+    color: var(--color-charcoal);
+    background: white;
+    border-radius: 8px 0 0 8px;
+    outline: none;
+    transition: border-color 150ms;
+  }
+  #q:focus { border-color: var(--color-moss); }
+  .search-btn {
+    background: var(--color-forest);
+    color: white;
+    border: none;
+    padding: var(--space-3) var(--space-6);
+    font-size: 1rem;
+    font-family: var(--font-sans);
+    cursor: pointer;
+    border-radius: 0 8px 8px 0;
+    transition: background 150ms;
+    white-space: nowrap;
+  }
+  .search-btn:hover { background: var(--color-moss); }
+
+  .search-stats {
+    font-size: 0.85rem;
+    color: var(--color-soil);
+    margin-bottom: var(--space-4);
+    min-height: 1.4em;
+  }
+
+  .result-list { list-style: none; }
+
+  .result-item {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-left: 3px solid transparent;
+    border-radius: 0 6px 6px 0;
+    transition: background 150ms, border-color 150ms;
+    flex-wrap: wrap;
+  }
+  .result-item:hover {
+    background: var(--color-parchment);
+    border-left-color: var(--color-fern);
+  }
+  .result-item + .result-item { border-top: 1px solid var(--color-stone); }
+
+  .result-zh {
+    font-family: var(--font-serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--color-bark);
+    min-width: 6em;
+  }
+  .result-en {
+    font-size: 0.85rem;
+    color: var(--color-sky);
+    flex: 1;
+  }
+  .result-meta {
+    font-size: 0.8rem;
+    color: var(--color-soil);
+    white-space: nowrap;
+  }
+  .result-season {
+    font-size: 0.75rem;
+    color: var(--color-fern);
+    white-space: nowrap;
+  }
+  /* highlight matched text */
+  mark {
+    background: #fff3a3;
+    color: inherit;
+    border-radius: 2px;
+    padding: 0 1px;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: var(--space-12);
+    color: var(--color-soil);
+    font-size: 1rem;
+  }
+  .no-results span { font-size: 2rem; display: block; margin-bottom: var(--space-3); }
+
+  @media (max-width: 640px) {
+    .search-container { padding: 0 var(--space-4); }
+    .search-page-header { padding: var(--space-4); }
+    .result-item { gap: var(--space-2); }
+    .result-meta, .result-season { font-size: 0.75rem; }
+  }
+</style>
+</head>
+<body class="page-other">
+
+<header class="search-page-header">
+  <a class="back-link" href="index.htm">← 首頁</a>
+  <h1>搜尋鳥類</h1>
+</header>
+
+<div class="search-container">
+  <div class="search-input-wrap">
+    <input id="q" type="search" placeholder="輸入中文鳥名或英文名稱…" autocomplete="off" autofocus>
+    <button class="search-btn" onclick="doSearch()">搜尋</button>
+  </div>
+  <div class="search-stats" id="stats"></div>
+  <ul class="result-list" id="results"></ul>
+</div>
+
+<script>
+var INDEX = null;
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function highlight(text, q) {
+  if (!q) return escapeHtml(text);
+  var parts = text.split(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'i'));
+  return parts.map(function(p) {
+    return p.toLowerCase() === q.toLowerCase()
+      ? '<mark>' + escapeHtml(p) + '</mark>'
+      : escapeHtml(p);
+  }).join('');
+}
+
+function render(records, q) {
+  var stats = document.getElementById('stats');
+  var list  = document.getElementById('results');
+
+  if (records.length === 0) {
+    stats.textContent = '';
+    list.innerHTML = '<div class="no-results"><span>🐦</span>找不到「' + escapeHtml(q) + '」的記錄</div>';
+    return;
+  }
+
+  stats.textContent = '找到 ' + records.length + ' 筆記錄';
+  list.innerHTML = records.map(function(r) {
+    return '<li class="result-item">' +
+      '<a href="' + escapeHtml(r.href) + '" style="display:contents;">' +
+        '<span class="result-zh">' + highlight(r.zh, q) + '</span>' +
+        '<span class="result-en">'  + highlight(r.en, q) + '</span>' +
+        '<span class="result-meta">' + escapeHtml(r.meta) + '</span>' +
+        '<span class="result-season"><a href="' + escapeHtml(r.seasonHref) + '">' + escapeHtml(r.season) + '</a></span>' +
+      '</a>' +
+    '</li>';
+  }).join('');
+}
+
+function doSearch() {
+  var q = document.getElementById('q').value.trim();
+  if (!q || !INDEX) return;
+
+  // Update URL without reload
+  var url = new URL(window.location);
+  url.searchParams.set('q', q);
+  history.replaceState(null, '', url);
+
+  var ql = q.toLowerCase();
+  var matched = INDEX.filter(function(r) {
+    return r.zh.includes(q) ||
+           r.en.toLowerCase().includes(ql) ||
+           r.meta.includes(q);
+  });
+
+  render(matched, q);
+}
+
+// Search on Enter
+document.getElementById('q').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') doSearch();
+});
+
+// Live search as typing
+document.getElementById('q').addEventListener('input', function() {
+  var q = this.value.trim();
+  if (q.length >= 1) doSearch();
+  else {
+    document.getElementById('stats').textContent = '';
+    document.getElementById('results').innerHTML = '';
+  }
+});
+
+// Load index then handle URL param
+fetch('search.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    INDEX = data;
+    var params = new URLSearchParams(window.location.search);
+    var q = params.get('q') || '';
+    if (q) {
+      document.getElementById('q').value = q;
+      doSearch();
+    }
+  });
+</script>
+</body>
+</html>
